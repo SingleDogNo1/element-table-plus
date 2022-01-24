@@ -49,7 +49,7 @@
       </Column>
     </el-table>
     <el-pagination
-      v-if="!pagination"
+      v-if="pagination"
       :size="size"
       :total="total"
       :current-page="page"
@@ -124,7 +124,7 @@ export default {
     },
     stripe: { default: false },
     pagination: {
-      default: false
+      default: true
     },
     height: { default: null },
     maxHeight: {
@@ -193,7 +193,7 @@ export default {
     initData() {
       this.pageSizeCount = this.pageSize
       this.page = this.currentPage
-      if (this.pagination) {
+      if (!this.pagination) {
         this.tableData = this.data
       } else {
         console.log(this.page, this.pageSizeCount)
@@ -228,19 +228,22 @@ export default {
       }
     },
     handleSelectionChange(row) {
-      console.log('handleSelectionChange:>> ', row)
       this.$emit('selectionChange', row)
     },
     handleCurrentChange(row) {
       this.$emit('currentChange', row)
     },
     setCurrentRow(row) {
-      console.log('row :>> ', JSON.stringify(row) === JSON.stringify(this.tableData[1]))
-      this.$refs.tableDataRef.setCurrentRow(this.tableData[1])
-      this.$refs.tableDataRef.setCurrentRow(row)
+      this.$refs.tableDataRef.setCurrentRow(this.tableData[row])
     },
-    toggleRowSelection() {
-      this.$refs.tableDataRef.toggleRowSelection.apply(this.$refs.tableDataRef, arguments)
+    toggleRowSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.tableDataRef.toggleRowSelection(this.tableData[row])
+        })
+      } else {
+        this.$refs.tableDataRef.clearSelection()
+      }
     }
   },
   created() {
