@@ -228,11 +228,17 @@ export default {
       }
     },
     handleSelectionChange(row) {
-      console.log('row:>> ', row)
-      this.$emit('selectionChange')
+      console.log('handleSelectionChange:>> ', row)
+      this.$emit('selectionChange', row)
     },
     handleCurrentChange(row) {
-      console.log('row :>> ', row)
+      this.$emit('currentChange', row)
+    },
+    setCurrentRow() {
+      this.$refs.tableDataRef.setCurrentRow.apply(this.$refs.tableDataRef, arguments)
+    },
+    toggleRowSelection() {
+      this.$refs.tableDataRef.toggleRowSelection.apply(this.$refs.tableDataRef, arguments)
     }
   },
   created() {

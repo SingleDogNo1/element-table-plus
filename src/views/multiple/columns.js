@@ -1,4 +1,7 @@
-// import Starts from '@/components/rate.vue'
+import Starts from '@/components/rate.vue'
+import { useElButton } from '@/utils/createButton'
+
+const { createButton, createDelButton, createDropDown } = useElButton()
 
 export const columns = function () {
   return [
@@ -25,17 +28,15 @@ export const columns = function () {
         {
           prop: 'rate',
           label: '用户信用度',
-          // align: 'center',
-          // minWidth: 200,
-          slot: 'rate'
-          // render: (h, record, index, columnItem) => {
-          //   let number = record[columnItem.prop]
-          //   return h(Starts, {
-          //     props: {
-          //       number
-          //     }
-          //   })
-          // }
+          minWidth: 200,
+          render: (h, record, _index, columnItem) => {
+            let number = record[columnItem.prop]
+            return h(Starts, {
+              props: {
+                number
+              }
+            })
+          }
         },
         {
           prop: '',
@@ -60,43 +61,57 @@ export const columns = function () {
     },
     {
       label: '操作',
-      align: 'left',
-      minWidth: 150,
+      minWidth: '200',
+      fixed: 'right',
       render: (h, record) => {
-        // https://cn.vuejs.org/v2/guide/render-function.html
         return h({
           render: createElement => {
+            // 创建按钮组父组件
             return createElement('div', [
-              createElement('el-button', {
-                attrs: { plain: true, size: 'small' },
-                on: {
-                  click: () => {
-                    this.$confirm('是否确认删除此行数据?', '提示', {
-                      confirmButtonText: '确定',
-                      cancelButtonText: '取消',
-                      type: 'warning'
-                    })
-                      .then(() => {
-                        console.log('delete :>> ', record)
-                      })
-                      .catch(() => {})
-                  }
+              // 创建删除按钮
+              createDelButton(
+                createElement,
+                () => {
+                  this.handleDelete(record)
                 },
-                domProps: {
-                  innerHTML: '删除'
+                {
+                  disabled: record.editable
                 }
-              }),
-              createElement('el-button', {
-                attrs: { plain: true, size: 'small' },
-                domProps: {
-                  innerHTML: '编辑'
+              ),
+              // 创建普通按钮
+              createButton(
+                createElement,
+                '编辑',
+                () => {
+                  this.handleEdit(record)
                 },
-                on: {
-                  click: () => {
-                    console.log('edit :>> ', record)
-                  }
+                {
+                  disabled: record.editable
                 }
-              })
+              ),
+              // 创建下拉菜单
+              createDropDown(
+                createElement,
+                [
+                  {
+                    attrs: {
+                      command: 'show',
+                      disabled: record.editable
+                    },
+                    text: '查看'
+                  },
+                  {
+                    attrs: {
+                      command: 'download',
+                      disabled: record.editable
+                    },
+                    text: '下载'
+                  }
+                ],
+                command => {
+                  console.log('command, record :>> ', command, record)
+                }
+              )
             ])
           }
         })

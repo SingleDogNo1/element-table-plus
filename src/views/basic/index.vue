@@ -8,18 +8,25 @@
       <el-checkbox disabled v-model="config.maxHeight">
         最大高度设置为 600px, 修改每页条数查看效果
       </el-checkbox>
+      <el-button @click="toggleSetCurrent(tableData[1])">单选状态下,选中第二条</el-button>
+      <el-button @click="toggleSetCurrent()">取消选择</el-button>
+      <el-checkbox v-model="config.selection">多选</el-checkbox>
+      <el-button @click="selectionRows([tableData[1], tableData[3]])">选择 2/4 行</el-button>
     </div>
 
     <Table
       :data="tableData"
       :rowHeader="columns"
       :total="total"
+      :selection="config.selection"
       :stripe="config.stripe"
       :border="config.border"
       :height="config.fixHeight ? '200' : ''"
       :maxHeight="600"
       :currentPage="currentPage"
       @onPageChange="pageChange"
+      @currentChange="handleCurrentChange"
+      ref="basicTable"
     />
   </div>
 </template>
@@ -35,13 +42,14 @@ export default {
         stripe: false,
         border: false,
         fixHeight: false,
-        maxHeight: true
+        maxHeight: true,
+        selection: false
       },
       columns: [
         {
           prop: 'date',
           label: '日期',
-          width: '400px',
+          width: '400px'
         },
         {
           prop: 'name',
@@ -62,7 +70,7 @@ export default {
           prop: 'age',
           label: '年龄',
           width: '400px',
-          fixed: 'right',
+          fixed: 'right'
         }
       ],
       tableData: [],
@@ -91,6 +99,23 @@ export default {
     },
     selectionChange(row) {
       console.log('row :>> ', row)
+    },
+    selectionRows(rows) {
+      console.log('1111 :>> ', rows)
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.basicTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.basicTable.clearSelection()
+      }
+    },
+    handleCurrentChange(row) {
+      console.log('handleCurrentChange :>> ', row)
+    },
+    toggleSetCurrent(row) {
+      console.log('row, this.$refs.basicTable :>> ', row, this.$refs.basicTable.setCurrentRow)
+      this.$refs.basicTable.setCurrentRow(row)
     }
   }
 }

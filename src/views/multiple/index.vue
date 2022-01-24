@@ -4,6 +4,7 @@
     <Table
       :data="tableData"
       :rowHeader="columns"
+      border
       :total="total"
       :currentPage="currentPage"
       @onPageChange="pageChange"
@@ -47,7 +48,7 @@ export default {
         rate: 3
       })
       .map((item, i) => {
-        return { ...item, rate: i % 5 }
+        return { ...item, rate: i % 5, editable: i % 3 === 0 }
       })
     this.total = this.tableData.length
     this.columns = columns.call(this)
@@ -58,6 +59,12 @@ export default {
     },
     selectionChange(row) {
       console.log('row :>> ', row)
+    },
+    handleEdit(record) {
+      this.$message.info(`编辑行数据: >> ${JSON.stringify(record)}`)
+    },
+    handleDelete(record) {
+      this.$message.error(`删除行数据: >> ${JSON.stringify(record)}`)
     }
   }
 }
