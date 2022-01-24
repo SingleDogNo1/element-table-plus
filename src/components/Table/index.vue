@@ -234,8 +234,10 @@ export default {
     handleCurrentChange(row) {
       this.$emit('currentChange', row)
     },
-    setCurrentRow() {
-      this.$refs.tableDataRef.setCurrentRow.apply(this.$refs.tableDataRef, arguments)
+    setCurrentRow(row) {
+      console.log('row :>> ', JSON.stringify(row) === JSON.stringify(this.tableData[1]))
+      this.$refs.tableDataRef.setCurrentRow(this.tableData[1])
+      this.$refs.tableDataRef.setCurrentRow(row)
     },
     toggleRowSelection() {
       this.$refs.tableDataRef.toggleRowSelection.apply(this.$refs.tableDataRef, arguments)

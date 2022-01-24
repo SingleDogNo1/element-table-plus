@@ -21,7 +21,7 @@
       :selection="config.selection"
       :stripe="config.stripe"
       :border="config.border"
-      :height="config.fixHeight ? '200' : ''"
+      :height="config.fixHeight ? '200' : '499'"
       :maxHeight="600"
       :currentPage="currentPage"
       @onPageChange="pageChange"
@@ -114,7 +114,6 @@ export default {
       console.log('handleCurrentChange :>> ', row)
     },
     toggleSetCurrent(row) {
-      console.log('row, this.$refs.basicTable :>> ', row, this.$refs.basicTable.setCurrentRow)
       this.$refs.basicTable.setCurrentRow(row)
     }
   }
